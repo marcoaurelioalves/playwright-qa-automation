@@ -32,3 +32,32 @@ test('remove item from cart', async ({page}) => {
   await expect(page.locator('.shopping_cart_badge')).toHaveCount(0);
 
 });
+
+test('access item from cart', async ({page}) => {
+
+  await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+  await expect(page.locator('.shopping_cart_badge')).toContainText('1')
+  await page.locator('[data-test="shopping-cart-link"]').click()
+  await expect(page).toHaveURL(/cart/);
+  await expect(page.locator('[data-test="title"]')).toContainText('Your Cart')
+  await expect(page.locator('[data-test="continue-shopping"]')).toContainText('Continue Shopping')
+  await expect(page.locator('[data-test="checkout"]')).toContainText('Checkout')
+
+});
+
+test('access item from cart and remove it', async ({page}) => {
+
+  await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+  await expect(page.locator('.shopping_cart_badge')).toContainText('1')
+  await page.locator('[data-test="shopping-cart-link"]').click()
+  await expect(page).toHaveURL(/cart/);
+  await expect(page.locator('[data-test="title"]')).toContainText('Your Cart')
+  await expect(page.locator('[data-test="continue-shopping"]')).toContainText('Continue Shopping')
+  await expect(page.locator('[data-test="checkout"]')).toContainText('Checkout')
+  await page.locator('[data-test="remove-sauce-labs-backpack"]').click()
+  await page.locator('[data-test="continue-shopping"]').click()
+  await expect(page).toHaveURL(/inventory/);
+  await expect(page.locator('[data-test="title"]')).toContainText('Products')
+  await expect(page.locator('.shopping_cart_badge')).toHaveCount(0);
+
+});
